@@ -27,7 +27,7 @@ public class socketdata extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_read_db);
+        setContentView(R.layout.socketdata);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -46,18 +46,28 @@ public class socketdata extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // Google.com
-                try {
-                    if (InetAddress.getByAddress("173.194.35.133".getBytes()).isReachable(1000)==true)
-                    {
-                        //Boolean variable named network
-                        Toast.makeText(socketdata.this, "Comunicación exitosa con la ip: " + serverIP.getText(), Toast.LENGTH_SHORT).show(); //Ping works
-                    }
-                    else
-                    {
-                        Toast.makeText(socketdata.this, "No fue posible establecer una conexión con la ip: " + serverIP.getText(), Toast.LENGTH_SHORT).show(); //Ping doesnt work
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
+                Toast.makeText(socketdata.this, "Haciendo ping a la ip: " + serverIP.getText(), Toast.LENGTH_SHORT).show(); //Ping works
+//                try {
+//                    if (InetAddress.getByAddress(serverIP.getText().toString().getBytes()).isReachable(0))
+//                    {
+//                        //Boolean variable named network
+//                        Toast.makeText(socketdata.this, "Comunicación exitosa con la ip: " + serverIP.getText(), Toast.LENGTH_SHORT).show(); //Ping works
+//                    }
+//                    else
+//                    {
+//                        Toast.makeText(socketdata.this, "No fue posible establecer una conexión con la ip: " + serverIP.getText(), Toast.LENGTH_SHORT).show(); //Ping doesnt work
+//                    }
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+                if (pingIP())
+                {
+                    //Boolean variable named network
+                    Toast.makeText(socketdata.this, "Comunicación exitosa con la ip: " + serverIP.getText(), Toast.LENGTH_SHORT).show(); //Ping works
+                }
+                else
+                {
+                    Toast.makeText(socketdata.this, "No fue posible establecer una conexión con la ip: " + serverIP.getText(), Toast.LENGTH_SHORT).show(); //Ping doesnt work
                 }
             }
         });
@@ -66,9 +76,37 @@ public class socketdata extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 mydatabase = openOrCreateDatabase("gpsreldb", MODE_PRIVATE,null);
-                mydatabase.execSQL("INSERT INTO SERVER(ip) VALUES('" + serverIP.getText() + "');");
+                mydatabase.execSQL("UPDATE SERVER SET ip = '" + serverIP.getText() + "';");
                 Toast.makeText(socketdata.this, "La ip: " + serverIP.getText() + " ha sido almacenada.", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private boolean pingIP()
+    {
+        System.out.println("executeCommand");
+        Runtime runtime = Runtime.getRuntime();
+        try
+        {
+            Process  mIpAddrProcess = runtime.exec("/system/bin/ping -c 1 " + serverIP.getText());
+            int mExitValue = mIpAddrProcess.waitFor();
+            System.out.println(" mExitValue "+mExitValue);
+            if(mExitValue==0){
+                return true;
+            }else{
+                return false;
+            }
+        }
+        catch (InterruptedException ignore)
+        {
+            ignore.printStackTrace();
+            System.out.println(" Exception:"+ignore);
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+            System.out.println(" Exception:"+e);
+        }
+        return false;
     }
 }
