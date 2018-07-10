@@ -29,7 +29,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/stopbutton">
+        android:layout_below="@+id/zero">
 
         <TextView
             android:id="@+id/textView"
@@ -97,6 +97,15 @@
         android:layout_alignRight="@+id/readDB"
         android:layout_below="@+id/readDB"
         android:text="Eliminar BD" />
+
+    <Button
+        android:id="@+id/zero"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/readDB"
+        android:layout_alignRight="@+id/readDB"
+        android:layout_below="@+id/deleteDB"
+        android:text="Datos Punto Cero" />
 
 
 </RelativeLayout>

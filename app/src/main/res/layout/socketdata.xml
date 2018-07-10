@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/serverIp_lbl"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:text="Server IP"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="73dp" />
+
+    <EditText
+        android:id="@+id/serverIp_txt"
+        android:layout_width="288dp"
+        android:layout_height="0dp"
+        android:editable="true"
+        android:ems="10"
+        android:enabled="true"
+        android:inputType="number"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="80dp"
+        tools:layout_editor_absoluteY="67dp" />
+
+    <TextView
+        android:id="@+id/miIp_lbl"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:text="Mi IP"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="16dp" />
+
+    <EditText
+        android:id="@+id/miIp_txt"
+        android:layout_width="312dp"
+        android:layout_height="0dp"
+        android:ems="10"
+        android:enabled="true"
+        android:inputType="number"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="56dp"
+        tools:layout_editor_absoluteY="10dp" />
+
+    <Button
+        android:id="@+id/ping_btn"
+        android:layout_width="170dp"
+        android:layout_height="wrap_content"
+        android:text="PING"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="132dp"
+        tools:ignore="MissingConstraints" />
+
+    <Button
+        android:id="@+id/saveIP_btn"
+        android:layout_width="163dp"
+        android:layout_height="wrap_content"
+        android:text="GUARDAR IP"
+        tools:layout_editor_absoluteX="203dp"
+        tools:layout_editor_absoluteY="130dp"
+        tools:ignore="MissingConstraints" />
+</android.support.constraint.ConstraintLayout>

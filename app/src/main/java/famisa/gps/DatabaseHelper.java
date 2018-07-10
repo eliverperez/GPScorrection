@@ -53,6 +53,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return gpsDetailsList;
     }
 
+    public String getIP()
+    {
+        String selectQuery = "SELECT ip FROM SERVER";
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            //Loop through the table rows
+            return cursor.getString(0);
+        }
+        else
+            return "";
+    }
+
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
 
