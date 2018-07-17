@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -7,61 +7,58 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/serverIp_lbl"
-        android:layout_width="0dp"
-        android:layout_height="40dp"
-        android:text="Server IP"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="73dp" />
-
-    <EditText
-        android:id="@+id/serverIp_txt"
-        android:layout_width="288dp"
-        android:layout_height="0dp"
-        android:editable="true"
-        android:ems="10"
-        android:enabled="true"
-        android:inputType="number"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="80dp"
-        tools:layout_editor_absoluteY="67dp" />
-
-    <TextView
         android:id="@+id/miIp_lbl"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="40dp"
         android:text="Mi IP"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="16dp" />
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"/>
 
     <EditText
         android:id="@+id/miIp_txt"
         android:layout_width="312dp"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/miIp_lbl"
+        android:layout_alignParentRight="true"
+        android:layout_toRightOf="@id/miIp_lbl"
+        android:ems="10"
+        android:enabled="false"
+        android:inputType="number" />
+
+    <TextView
+        android:id="@+id/serverIp_lbl"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:text="Server IP"
+        android:layout_below="@id/miIp_lbl"
+        android:layout_alignLeft="@id/miIp_lbl"/>
+
+    <EditText
+        android:id="@+id/serverIp_txt"
+        android:layout_width="288dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/serverIp_lbl"
+        android:layout_alignParentRight="true"
+        android:layout_toRightOf="@id/serverIp_lbl"
+        android:editable="true"
         android:ems="10"
         android:enabled="true"
-        android:inputType="number"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="56dp"
-        tools:layout_editor_absoluteY="10dp" />
+        android:inputType="phone"
+        android:text="Servidor IP" />
 
     <Button
         android:id="@+id/ping_btn"
-        android:layout_width="170dp"
+        android:layout_width="190dp"
         android:layout_height="wrap_content"
         android:text="PING"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="132dp"
-        tools:ignore="MissingConstraints" />
+        android:layout_below="@id/serverIp_lbl"/>
 
     <Button
         android:id="@+id/saveIP_btn"
         android:layout_width="163dp"
         android:layout_height="wrap_content"
         android:text="GUARDAR IP"
-        tools:layout_editor_absoluteX="203dp"
-        tools:layout_editor_absoluteY="130dp"
-        tools:ignore="MissingConstraints" />
-</android.support.constraint.ConstraintLayout>
+        android:layout_alignTop="@id/ping_btn"
+        android:layout_alignParentRight="true"
+        android:layout_toRightOf="@id/ping_btn"/>
+</RelativeLayout>

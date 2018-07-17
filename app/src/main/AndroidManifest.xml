@@ -45,6 +45,11 @@
             android:name=".readDB"
             android:label="@string/title_activity_read_db"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+
+        <activity
+            android:name=".socketdata"
+            android:label="Socket Data"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

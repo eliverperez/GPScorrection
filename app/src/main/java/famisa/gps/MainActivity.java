@@ -115,6 +115,8 @@ public class MainActivity extends AppCompatActivity {
                                 mydatabase.execSQL("DROP TABLE GPS");
                                 mydatabase.execSQL("CREATE TABLE IF NOT EXISTS GPS(id INTEGER PRIMARY KEY AUTOINCREMENT,latitude DOUBLE, longitude DOUBLE, fechahora DATETIME);");
                                 mydatabase.execSQL("CREATE TABLE IF NOT EXISTS SERVER(ip VARCHAR(18));");
+                                mydatabase.execSQL("CREATE TABLE IF NOT EXISTS GPSCORRECTION(id INTEGER PRIMARY KEY AUTOINCREMENT,latitude DOUBLE, longitude DOUBLE, newlatitude DOUBLE DEFAULT  NULL, newlongitude DOUBLE DEFAULT NULL, fechahora DATETIME);");
+                                mydatabase.execSQL("INSERT INTO SERVER(ip) VALUES('');");
                                 Toast.makeText(MainActivity.this, "La base de datos fue eliminada con exito.", Toast.LENGTH_SHORT).show();
                             }})
                         .setNegativeButton(android.R.string.no, null).show();
@@ -146,6 +148,9 @@ public class MainActivity extends AppCompatActivity {
     {
         mydatabase = openOrCreateDatabase("gpsreldb", MODE_PRIVATE,null);
         mydatabase.execSQL("CREATE TABLE IF NOT EXISTS GPS(id INTEGER PRIMARY KEY AUTOINCREMENT,latitude DOUBLE, longitude DOUBLE, fechahora DATETIME);");
+        mydatabase.execSQL("CREATE TABLE IF NOT EXISTS SERVER(ip VARCHAR(18));");
+        mydatabase.execSQL("CREATE TABLE IF NOT EXISTS GPSCORRECTION(id INTEGER PRIMARY KEY AUTOINCREMENT,latitude DOUBLE, longitude DOUBLE, newlatitude DOUBLE DEFAULT  NULL, newlongitude DOUBLE DEFAULT NULL, fechahora DATETIME);");
+        mydatabase.execSQL("INSERT INTO SERVER(ip) VALUES('');");
     }
 
     public void insertDB()

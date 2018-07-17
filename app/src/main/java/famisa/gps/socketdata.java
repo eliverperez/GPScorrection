@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.ServerSocket;
 
 public class socketdata extends AppCompatActivity {
 
@@ -47,19 +48,6 @@ public class socketdata extends AppCompatActivity {
             public void onClick(View view) {
                 // Google.com
                 Toast.makeText(socketdata.this, "Haciendo ping a la ip: " + serverIP.getText(), Toast.LENGTH_SHORT).show(); //Ping works
-//                try {
-//                    if (InetAddress.getByAddress(serverIP.getText().toString().getBytes()).isReachable(0))
-//                    {
-//                        //Boolean variable named network
-//                        Toast.makeText(socketdata.this, "Comunicación exitosa con la ip: " + serverIP.getText(), Toast.LENGTH_SHORT).show(); //Ping works
-//                    }
-//                    else
-//                    {
-//                        Toast.makeText(socketdata.this, "No fue posible establecer una conexión con la ip: " + serverIP.getText(), Toast.LENGTH_SHORT).show(); //Ping doesnt work
-//                    }
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
                 if (pingIP())
                 {
                     //Boolean variable named network
@@ -91,9 +79,12 @@ public class socketdata extends AppCompatActivity {
             Process  mIpAddrProcess = runtime.exec("/system/bin/ping -c 1 " + serverIP.getText());
             int mExitValue = mIpAddrProcess.waitFor();
             System.out.println(" mExitValue "+mExitValue);
-            if(mExitValue==0){
+            if(mExitValue==0)
+            {
                 return true;
-            }else{
+            }
+            else
+            {
                 return false;
             }
         }
