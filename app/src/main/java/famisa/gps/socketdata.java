@@ -14,6 +14,8 @@ import android.widget.Toast;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
+import java.net.UnknownHostException;
+import java.text.Format;
 
 public class socketdata extends AppCompatActivity {
 
@@ -41,7 +43,10 @@ public class socketdata extends AppCompatActivity {
         DatabaseHelper dbh = new DatabaseHelper(this);
         serverIP.setText(dbh.getIP());
 
-        miIP.setText(Utils.getIPAddress(true));
+//        miIP.setText(Utils.getIPAddress(true));
+        WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
+        String ipAddress = Formatter.formatIpAddress(wifiManager.getConnectionInfo().getIpAddress());
+        miIP.setText(ipAddress);
 
         ping.setOnClickListener(new View.OnClickListener() {
             @Override

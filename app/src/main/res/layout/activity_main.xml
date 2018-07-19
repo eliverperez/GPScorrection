@@ -29,7 +29,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/zero">
+        android:layout_below="@+id/map_coordinates">
 
         <TextView
             android:id="@+id/textView"
@@ -106,6 +106,31 @@
         android:layout_alignRight="@+id/readDB"
         android:layout_below="@+id/deleteDB"
         android:text="Datos Punto Cero" />
+
+    <Button
+        android:id="@+id/gps_p0"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/deleteDB"
+        android:layout_alignParentLeft="true"
+        android:text="Iniciar GPS Correccion" />
+
+    <Button
+        android:id="@+id/startServer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/gps_p0"
+        android:text="Iniciar Servidor" />
+
+    <Button
+        android:id="@+id/map_coordinates"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/zero"
+        android:layout_alignEnd="@+id/readDB"
+        android:layout_alignRight="@+id/readDB"
+        android:text="Coordenadas en Mapa" />
 
 
 </RelativeLayout>

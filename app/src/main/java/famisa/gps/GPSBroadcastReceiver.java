@@ -21,7 +21,7 @@ import java.io.OutputStreamWriter;
  * Created by Eliver on 30/06/18.
  */
 
-public class SilenceBroadcastReceiver extends BroadcastReceiver {
+public class GPSBroadcastReceiver extends BroadcastReceiver {
 
     private LocationManager locationManager;
     private LocationListener listener;
@@ -33,8 +33,15 @@ public class SilenceBroadcastReceiver extends BroadcastReceiver {
     OutputStreamWriter myOutWriter;
     Intent i;
 
+    public GPSBroadcastReceiver(MainActivity mainActivity)
+    {
+        this.mainActivity = mainActivity;
+    }
+
     @Override
     public void onReceive(final Context context, Intent intent) {
+//        mainActivity = (MainActivity) context;
+        mainActivity = new MainActivity();
         i = new Intent(context, sqlite.class);
 
         locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
@@ -42,10 +49,10 @@ public class SilenceBroadcastReceiver extends BroadcastReceiver {
         listener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-//                locationManager.removeUpdates(listener);
                 i.putExtra("latitude", location.getLatitude());
                 i.putExtra("longitude", location.getLongitude());
-                context.startService(i);
+                mainActivity.saveCoordinates(location.getLatitude(), location.getLongitude());
+                locationManager.removeUpdates(listener);
             }
 
             @Override
@@ -86,6 +93,6 @@ public class SilenceBroadcastReceiver extends BroadcastReceiver {
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        locationManager.requestLocationUpdates("gps", 60 * 1000, 0, listener);
+        locationManager.requestLocationUpdates("gps", 0, 0, listener);
     }
 }
