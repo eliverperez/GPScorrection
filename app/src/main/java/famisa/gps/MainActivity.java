@@ -602,6 +602,11 @@ public class MainActivity extends AppCompatActivity {
                 am.set(AlarmManager.RTC_WAKEUP, gpsExec.getTimeInMillis(), PendingIntent.getBroadcast(MainActivity.this, 100, intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));
 
                 Toast.makeText(MainActivity.this, "Hora: " + hour + "\nMinuto: " + minute + "\nSegundo: " + second + "\nCurrent:" + System.currentTimeMillis() + "\ngpsExec: " + gpsExec.getTimeInMillis(), Toast.LENGTH_LONG).show();
+
+                if(am != null)
+                {
+                    Toast.makeText(MainActivity.this, "ALARMA EN FUNCIONAMIENTO", Toast.LENGTH_LONG).show();
+                }
             }
         });
     }

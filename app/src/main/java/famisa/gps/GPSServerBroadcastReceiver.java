@@ -34,11 +34,6 @@ public class GPSServerBroadcastReceiver extends BroadcastReceiver {
     OutputStreamWriter myOutWriter;
     Intent i;
 
-    public  GPSServerBroadcastReceiver(MainActivity mainActivity)
-    {
-        this.mainActivity = mainActivity;
-    }
-
     @Override
     public void onReceive(final Context context, Intent intent) {
         Toast.makeText(context, "GPS SERVER BROADCAST RECEIVER", Toast.LENGTH_LONG).show();

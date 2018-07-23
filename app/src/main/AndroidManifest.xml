@@ -37,6 +37,16 @@
                 <action android:name="famisa.gps.UnsilenceBroadcastReceiver" />
             </intent-filter>
         </receiver>
+        <receiver android:name=".GPSBroadcastReceiver">
+            <intent-filter>
+                <action android:name="famisa.gps.GPSBroadcastReceiver" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".GPSServerBroadcastReceiver">
+            <intent-filter>
+                <action android:name="famisa.gps.GPSServerBroadcastReceiver" />
+            </intent-filter>
+        </receiver>
 
         <service
             android:name=".sqlite"
