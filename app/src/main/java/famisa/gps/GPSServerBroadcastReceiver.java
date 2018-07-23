@@ -12,6 +12,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -40,6 +41,7 @@ public class GPSServerBroadcastReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(final Context context, Intent intent) {
+        Toast.makeText(context, "GPS SERVER BROADCAST RECEIVER", Toast.LENGTH_LONG).show();
 //        mainActivity = (MainActivity) context;
         mainActivity = new MainActivity();
         i = new Intent(context, sqlite.class);

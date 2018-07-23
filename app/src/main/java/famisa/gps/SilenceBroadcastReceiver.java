@@ -12,6 +12,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -35,6 +36,7 @@ public class SilenceBroadcastReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(final Context context, Intent intent) {
+        Toast.makeText(context, "SILENCE BROADCAST RECEIVER", Toast.LENGTH_LONG).show();
         i = new Intent(context, sqlite.class);
 
         locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);

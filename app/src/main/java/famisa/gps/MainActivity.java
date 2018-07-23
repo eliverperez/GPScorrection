@@ -48,6 +48,9 @@ public class MainActivity extends AppCompatActivity {
     private Button gpsZero;
     private Button startServer;
 
+    private TextView serverStatus;
+    ServerSocket serverSocket;
+
     private TextView textView;
     private EditText hora;
     private  EditText minuto;
@@ -85,6 +88,8 @@ public class MainActivity extends AppCompatActivity {
     private static int minute;
     private static int second;
 
+    AlarmManager am;
+
     /*
         0 - Inactive
         1 - On client-side set textview value of response.
@@ -109,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
         socketData = (Button) findViewById(R.id.zero);
         gpsZero = (Button) findViewById(R.id.gps_p0);
         startServer = (Button) findViewById(R.id.startServer);
+        serverStatus = (TextView) findViewById(R.id.serverStatus);
 
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
@@ -183,20 +189,20 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        startServer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                socketServerThread = new SocketServerThread();
-                socketServerThread.start();
-                Toast.makeText(MainActivity.this, "Servidor iniciado.", Toast.LENGTH_LONG);
-            }
-        });
-        socketServerThread = new SocketServerThread();
+//        socketServerThread = new SocketServerThread();
+//        socketServerThread.start();
+        Thread socketServerThread = new Thread(new SocketServerThread());
         socketServerThread.start();
+//        if(socketServerThread.socket.isClosed())
+//        {
+//            serverStatus.setText("Server Status: Online");
+//        } else {
+//            serverStatus.setText("Server Status: Offline");
+//        }
         zeroStart = true;
         scheduleGPS();
         stopGPS();
-        configure_button();
+        //configure_button();
         zeroStart = false;
         startGPSZero();
     }
@@ -325,7 +331,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent intentAlarm = new Intent(MainActivity.this, SilenceBroadcastReceiver.class);
 
                 am[0] = (AlarmManager) MainActivity.this.getSystemService(ALARM_SERVICE);
-                am[0].set(AlarmManager.RTC_WAKEUP, gpsExec.getTimeInMillis(), PendingIntent.getBroadcast(MainActivity.this, 100, intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));
+                am[0].set(AlarmManager.RTC_WAKEUP, gpsExec.getTimeInMillis(), PendingIntent.getBroadcast(MainActivity.this, 0, intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));
 
 //                for(int i = 1; i < pruebas; i++) {
 //                    //create new calendar instance
@@ -370,7 +376,7 @@ public class MainActivity extends AppCompatActivity {
                 //get Alarm manager instance
                 AlarmManager am = (AlarmManager) MainActivity.this.getSystemService(ALARM_SERVICE);
                 //build intent for midnight
-                PendingIntent gpsPI = PendingIntent.getService(MainActivity.this, 100, new Intent("famisa.gps.SilenceBroadcastReceiver"), PendingIntent.FLAG_UPDATE_CURRENT);
+                PendingIntent gpsPI = PendingIntent.getService(MainActivity.this, 0, new Intent("famisa.gps.SilenceBroadcastReceiver"), PendingIntent.FLAG_UPDATE_CURRENT);
                 //cancel it
                 am.cancel(gpsPI);
             }
@@ -504,22 +510,18 @@ public class MainActivity extends AppCompatActivity {
                             success = false;
                         }
                     } else if (request.equals("send-zero")) {
-//                        if(jsondata.getString("request") != null) {
-//                            success = true;
+                        success = true;
                             MainActivity.this.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
                                     try {
+                                        textView.setText("SERVER\nCorrection set to start at:\n " + jsondata.getInt("hour") + ":" + jsondata.getInt("minute") + ":" + jsondata.getInt("second"));
                                         scheduleGPSCorrectionServer(jsondata.getInt("hour"), jsondata.getInt("minute"), jsondata.getInt("second"));
-                                        textView.setText("SERVER\nCorrection set to start at:\n " + jsonData.getInt("hour") + ":" + jsonData.getInt("minute") + ":" + jsonData.getInt("second"));
                                     } catch (JSONException e) {
                                         e.printStackTrace();
                                     }
                                 }
                             });
-//                        } else {
-//                            success = false;
-//                        }
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -579,46 +581,57 @@ public class MainActivity extends AppCompatActivity {
 
     private void scheduleGPSCorrection(int hora, int minuto, int segundo)
     {
+        this.hour = hora;
+        this.minute = minuto;
+        this.second = segundo;
         MainActivity.this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                textView.setText("RUNNING CORRECTION");
+                textView.setText(textView.getText().toString() + "\nRUNNING CORRECTION");
+
+                Calendar gpsExec = Calendar.getInstance();
+
+                gpsExec.set(Calendar.HOUR_OF_DAY, hour);
+                gpsExec.set(Calendar.MINUTE, minute);
+                gpsExec.set(Calendar.SECOND, second);
+                gpsExec.set(Calendar.MILLISECOND, 0);
+
+                Intent intentAlarm = new Intent(MainActivity.this, GPSBroadcastReceiver.class);
+
+                am = (AlarmManager) MainActivity.this.getSystemService(ALARM_SERVICE);
+                am.set(AlarmManager.RTC_WAKEUP, gpsExec.getTimeInMillis(), PendingIntent.getBroadcast(MainActivity.this, 100, intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));
+
+                Toast.makeText(MainActivity.this, "Hora: " + hour + "\nMinuto: " + minute + "\nSegundo: " + second + "\nCurrent:" + System.currentTimeMillis() + "\ngpsExec: " + gpsExec.getTimeInMillis(), Toast.LENGTH_LONG).show();
             }
         });
-        Calendar gpsExec = Calendar.getInstance();
-        AlarmManager am;
-
-        gpsExec.set(Calendar.HOUR_OF_DAY, hora);
-        gpsExec.set(Calendar.MINUTE, minuto);
-        gpsExec.set(Calendar.SECOND, segundo);
-        gpsExec.set(Calendar.MILLISECOND, 0);
-
-        Intent intentAlarm = new Intent(MainActivity.this, GPSBroadcastReceiver.class);
-
-        am = (AlarmManager) MainActivity.this.getSystemService(ALARM_SERVICE);
-        am.set(AlarmManager.RTC_WAKEUP, gpsExec.getTimeInMillis(), PendingIntent.getBroadcast(MainActivity.this, 100, intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));
     }
 
     private void scheduleGPSCorrectionServer(int hora, int minuto, int segundo)
     {
+        this.hour = hora;
+        this.minute = minuto;
+        this.second = segundo;
         MainActivity.this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                textView.setText("RUNNING CORRECTION");
+                textView.setText(textView.getText().toString() + "\nRUNNING CORRECTION");
+
+                Calendar gpsExec = Calendar.getInstance();
+
+                gpsExec.set(Calendar.HOUR_OF_DAY, hour);
+                gpsExec.set(Calendar.MINUTE, minute);
+                gpsExec.set(Calendar.SECOND, second);
+                gpsExec.set(Calendar.MILLISECOND, 0);
+
+                Intent intentAlarm = new Intent(MainActivity.this, GPSServerBroadcastReceiver.class);
+
+                am = (AlarmManager) MainActivity.this.getSystemService(ALARM_SERVICE);
+                am.set(AlarmManager.RTC_WAKEUP, gpsExec.getTimeInMillis(), PendingIntent.getBroadcast(MainActivity.this, 100, intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));
+
+                Toast.makeText(MainActivity.this, "Hora: " + hour + "\nMinuto: " + minute + "\nSegundo: " + second + "\nCurrent:" + System.currentTimeMillis() + "\ngpsExec: " + gpsExec.getTimeInMillis(), Toast.LENGTH_LONG).show();
+
             }
         });
-        Calendar gpsExec = Calendar.getInstance();
-        AlarmManager am;
-
-        gpsExec.set(Calendar.HOUR_OF_DAY, hora);
-        gpsExec.set(Calendar.MINUTE, minuto);
-        gpsExec.set(Calendar.SECOND, segundo);
-        gpsExec.set(Calendar.MILLISECOND, 0);
-
-        Intent intentAlarm = new Intent(MainActivity.this, GPSServerBroadcastReceiver.class);
-
-        am = (AlarmManager) MainActivity.this.getSystemService(ALARM_SERVICE);
-        am.set(AlarmManager.RTC_WAKEUP, gpsExec.getTimeInMillis(), PendingIntent.getBroadcast(MainActivity.this, 100, intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));
     }
 
     public void getCorrection(double latitude, double longitude)
@@ -650,17 +663,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private class SocketServerThread extends Thread {
+        Socket socket = null;
         JSONObject jsonData = new JSONObject();
+
+        public boolean getStatus()
+        {
+            return socket.isConnected();
+        }
 
         @Override
         public void run() {
-            if(zeroStart) {
-                Socket socket = null;
-                ServerSocket serverSocket;
+//            if(zeroStart) {
                 DataInputStream dataInputStream = null;
                 DataOutputStream dataOutputStream = null;
 
-                Log.i(TAG, "Creating server socket2");
                 try {
                     Log.i(TAG, "Creating server socket");
                     serverSocket = new ServerSocket(SocketServerPORT);
@@ -779,8 +795,8 @@ public class MainActivity extends AppCompatActivity {
                                     @Override
                                     public void run() {
                                         try {
-                                            scheduleGPSCorrection(hour, minute, second);
                                             textView.setText("CLIENT\nCorrection set to start at:\n " + jsonData.getInt("hour") + ":" + jsonData.getInt("minute") + ":" + jsonData.getInt("second"));
+                                            scheduleGPSCorrection(hour, minute, second);
                                             Toast.makeText(MainActivity.this, "GPS correction about to start", Toast.LENGTH_SHORT).show();
                                         } catch (JSONException e) {
                                             e.printStackTrace();
@@ -838,35 +854,41 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                 } catch (IOException e) {
+                    Log.e(TAG, "IOException");
                     e.printStackTrace();
                 } catch (JSONException e) {
+                    Log.e(TAG, "JSONException");
                     e.printStackTrace();
-                } finally {
-                    if (socket != null) {
-                        try {
-                            socket.close();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                    if (dataInputStream != null) {
-                        try {
-                            dataInputStream.close();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                    if (dataOutputStream != null) {
-                        try {
-                            dataOutputStream.close();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
+                } catch (Exception e) {
+                    Log.e(TAG, "Server Exception");
+                    e.printStackTrace();
                 }
-            }
+//                finally {
+//                    if (socket != null) {
+//                        try {
+//                            socket.close();
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//
+//                    if (dataInputStream != null) {
+//                        try {
+//                            dataInputStream.close();
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//
+//                    if (dataOutputStream != null) {
+//                        try {
+//                            dataOutputStream.close();
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                }
+//            }
 
         }
 
